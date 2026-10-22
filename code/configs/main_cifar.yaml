@@ -1,0 +1,16 @@
+dataset: cifar10
+seed: 7
+rounds: 30
+num_clients: 20
+num_edges: 4
+clients_per_round: 10
+dirichlet_alpha: 0.5
+local_epochs: 1
+batch_size: 64
+lr: 0.02
+strategy: mare_hierarchical
+client_failure_prob: 0.20
+straggler_prob: 0.10
+edge_failure_prob: 0.08
+bursty_failures: true
+output_csv: ../results/cifar_mare.csv
