@@ -1,0 +1,19 @@
+# Entornos virtuales
+.venv/
+venv/
+env/
+# Caches de Python
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+# Datos pesados y datasets cacheados
+.cache/
+data/raw/
+*.tar.gz
+*.zip
+# PDFs de literatura (terceros / derechos de autor)
+literature/pdfs/
+# Archivos de sistema y logs temporales
+.DS_Store
+*.log
