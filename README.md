@@ -4,7 +4,7 @@
 
 Federated learning (FL) trains a shared model on many devices without moving their data. In practice, those devices are not reliable: some crash, some lose the connection for a moment, others answer too late, and the edge servers that collect their updates can go down as well. MARE-FL is a fault manager for this setting. Instead of answering every failure with the same fixed rule, it decides during training how to recover from each one, using a MAPE-K feedback loop and what it has learned about every client and edge.
 
-This repository contains the implementation of MARE-FL, the simulator used to evaluate it, the experiment configurations and the scripts that rebuild every number of the evaluation.
+This repository contains the implementation of MARE-FL, the simulator used to evaluate it, the experiment configurations and the raw results of the evaluation.
 
 ## Why recovery needs to adapt
 
@@ -149,39 +149,38 @@ The smoke test runs the unit tests, two short runs on the small Digits dataset, 
 
 ## Reproducing the results
 
-**From our raw results (a few seconds):**
+The raw results of the evaluation are in `results/`:
 
-```bash
-python make_paper_results.py results/grid_fashion_full.csv.gz results/grid_har_full.csv.gz \
-    --out results/paper --plots
-```
+| File | Content |
+|---|---|
+| `grid_fashion_full.csv.gz`, `grid_har_full.csv.gz` | One row per round of every run (648 runs of 50 rounds per dataset) |
+| `summary_fashion_full.csv`, `summary_har_full.csv` | Averages per strategy, computed with `analyze_results.py` |
 
-**Running all the experiments again (several hours):**
+To run all the experiments again (several hours):
 
 ```bash
 bash scripts/run_main_experiments_parallel.sh
-python make_paper_results.py results/grid_fashion_full.csv results/grid_har_full.csv \
-    --out results/paper --plots
 ```
 
-The full grid crosses 6 strategies, 3 seeds, 4 client failure probabilities, 3 edge failure probabilities and 3 levels of label skew on two datasets, which gives 1,296 runs of 50 rounds in total. The script uses 64 parallel processes; change `--workers` in `scripts/run_main_experiments_parallel.sh` to match your machine.
-
-| Result | File in `results/paper/` |
-|---|---|
-| Main results table (effective updates, recovery success, traffic and final accuracy) | `table2.csv` |
-| Paired comparisons: wins, median differences and Wilcoxon tests | `paired_tests.csv` |
-| Effective updates for each failure probability | `by_failure_rate.csv`, `fig2.png` |
-| Actions chosen by the planner for each type of fault | `action_mix.csv`, `state_action.csv`, `fig3.png` |
+The full grid crosses 6 strategies, 3 seeds, 4 client failure probabilities, 3 edge failure probabilities and 3 levels of label skew on two datasets, which gives 1,296 runs of 50 rounds in total. The script writes the raw results and their summaries to `results/`. It uses 64 parallel processes; change `--workers` in `scripts/run_main_experiments_parallel.sh` to match your machine.
 
 The fault traces depend only on the seed and on the failure probabilities, and training uses its own random generator. Effective updates, recovery success, traffic and latency are therefore reproduced exactly; the accuracy can change a little between machines or library versions.
 
-A few details are useful to read the numbers correctly:
+The values of the results table come from the raw files:
+
+| Metric | How it is computed |
+|---|---|
+| Effective updates | For each run, the sum of `accepted_updates` divided by the sum of `selected` over its 50 rounds |
+| Recovery success | Total `successful_recoveries` divided by total `recovery_attempts`, over all the runs of a strategy |
+| Traffic | For each run, the sum of `bytes_total` over its 50 rounds |
+| Final accuracy | For each run, the `accuracy` of its last round |
+
+Effective updates, traffic and final accuracy are then averaged over the 108 scenarios of each dataset. `analyze_results.py` reports recovery success as the mean of the per-round ratios, so the value in the summary files is slightly different.
+
+Two simulation details are also useful to read the numbers correctly:
 
 - **Control time.** Each decision adds a fixed control latency, 0.015 s at an edge and 0.090 s in the cloud. The latency of a round is its slowest event plus the control latency of all its decisions, which are processed one after another.
 - **Recovery outcomes.** A retry or a replacement succeeds with a probability that depends on the reliability of the client in the knowledge base.
-- **Effective updates.** `make_paper_results.py` also reports a stricter version, `effective_global`, which removes the updates that are lost later because their edge failed.
-- **Recovery success.** Total successful recoveries divided by total recovery attempts. `analyze_results.py` reports the mean of the per-round ratios instead, so its value is slightly different.
-- **Final accuracy.** The test accuracy of the last round of each run, averaged over the 108 scenarios of each dataset.
 
 ## Code organization
 
@@ -193,12 +192,13 @@ tests/                    unit tests
 main.py                   runs one configuration
 run_grid.py               runs a grid in one process
 run_grid_parallel.py      runs the full grid in several processes
-make_paper_results.py     builds the tables and figures of the evaluation from the grid CSV files
 analyze_results.py        quick summary of one grid CSV (used by the scripts in scripts/)
 plot_results.py           accuracy and latency plot of the reduced grid
 results/
   grid_fashion_full.csv.gz   raw results for Fashion-MNIST (648 runs, one row per round)
   grid_har_full.csv.gz       raw results for UCI-HAR (648 runs, one row per round)
+  summary_fashion_full.csv   averages per strategy for Fashion-MNIST
+  summary_har_full.csv       averages per strategy for UCI-HAR
 ```
 
 | Part of MARE-FL | Code |
