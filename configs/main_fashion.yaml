@@ -20,4 +20,4 @@ burst_exit_prob: 0.35
 burst_multiplier: 2.5
 deadline_s: 1.0
 max_wait_s: 1.0
-output_csv: ../results/fashion_mare.csv
+output_csv: results/fashion_mare.csv

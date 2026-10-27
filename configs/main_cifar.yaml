@@ -13,4 +13,4 @@ client_failure_prob: 0.20
 straggler_prob: 0.10
 edge_failure_prob: 0.08
 bursty_failures: true
-output_csv: ../results/cifar_mare.csv
+output_csv: results/cifar_mare.csv

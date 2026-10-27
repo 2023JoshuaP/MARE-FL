@@ -53,7 +53,7 @@ class ExperimentConfig:
 
     min_updates_for_partial: int = 2
     device: str = "cpu"
-    output_csv: str = "../results/run.csv"
+    output_csv: str = "results/run.csv"
 
     @classmethod
     def from_yaml(cls, path: str) -> "ExperimentConfig":

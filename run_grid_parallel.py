@@ -22,7 +22,7 @@ def run_simulation(cfg):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--config", required=True)
-    ap.add_argument("--output", default="../results/grid_parallel.csv")
+    ap.add_argument("--output", default="results/grid_parallel.csv")
     ap.add_argument("--quick", action="store_true")
     ap.add_argument("--workers", type=int, default=max(1, os.cpu_count() // 2))
     args = ap.parse_args()

@@ -7,7 +7,7 @@ import pandas as pd
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("csv")
-    ap.add_argument("--out", default="../results/summary.csv")
+    ap.add_argument("--out", default="results/summary.csv")
     args = ap.parse_args()
     df = pd.read_csv(args.csv)
     last = df.sort_values("round").groupby(

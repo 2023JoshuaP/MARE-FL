@@ -14,7 +14,7 @@ STRATEGIES = [
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--config", required=True)
-    ap.add_argument("--output", default="../results/grid.csv")
+    ap.add_argument("--output", default="results/grid.csv")
     ap.add_argument("--quick", action="store_true")
     args = ap.parse_args()
     base = ExperimentConfig.from_yaml(args.config)

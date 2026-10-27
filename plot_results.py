@@ -5,7 +5,7 @@ from pathlib import Path
 import sys
 
 def main():
-    csv_file = "../results/summary_fashion.csv"
+    csv_file = "results/summary_fashion.csv"
     if not Path(csv_file).exists():
         print(f"Error: {csv_file} not found.")
         sys.exit(1)
@@ -55,7 +55,7 @@ def main():
     ax2.get_legend().remove()
 
     plt.tight_layout()
-    output_img = "../results/plot_fashion.png"
+    output_img = "results/plot_fashion.png"
     plt.savefig(output_img, bbox_inches='tight')
     print(f"Saved plot to {output_img}")
 

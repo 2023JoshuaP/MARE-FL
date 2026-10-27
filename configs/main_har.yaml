@@ -17,4 +17,4 @@ edge_failure_prob: 0.08
 bursty_failures: true
 deadline_s: 1.0
 max_wait_s: 1.0
-output_csv: ../results/har_mare.csv
+output_csv: results/har_mare.csv

@@ -17,4 +17,4 @@ edge_failure_prob: 0.10
 bursty_failures: true
 deadline_s: 0.8
 base_latency_s: 0.10
-output_csv: ../results/smoke_digits.csv
+output_csv: results/smoke_digits.csv

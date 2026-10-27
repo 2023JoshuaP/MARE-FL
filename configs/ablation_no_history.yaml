@@ -17,4 +17,4 @@ bursty_failures: true
 knowledge_ewma: 0.0
 prior_reliability: 0.90
 prior_latency_s: 0.15
-output_csv: ../results/ablations/no_history.csv
+output_csv: results/ablations/no_history.csv
